@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-
+import path from "node:path";
 dotenv.config();
 
 export default {
@@ -17,4 +17,3 @@ export default {
     },
   },
 };
- 
