@@ -18,5 +18,5 @@ export const deleteComment = async (id: number) => {
 };
 
 export const getCommentById = async (id: number) => {
-  return db("comments").where(id).first();
+  return db("comments").where({ id }).first();
 };
