@@ -35,6 +35,10 @@ export const updateCategoryController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const item = await updateCategory(Number(id), req.body);
+    if (item.length === 0) {
+      res.status(404).json({ message: "Category not found" });
+      return;
+    }
     res.status(200).json(item);
   } catch (error) {
     console.log(error);
@@ -46,6 +50,10 @@ export const deleteCategoryController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const deletedItem = await deleteCategory(Number(id));
+    if (deletedItem.length === 0) {
+      res.status(404).json({ message: "Category not found" });
+      return;
+    }
     res.status(204).json(deletedItem);
   } catch (error) {
     console.log(error);
@@ -59,12 +67,14 @@ export const getCategoryByIdController = async (
   try {
     const { id } = req.params;
     const item = await getCategoryById(Number(id));
+
     if (!item) {
-      res.status(404).json({ message: "Category not found" });
+      return res.status(404).json({ message: "Category not found" });
     }
-    res.status(200).json(item);
+
+    return res.status(200).json(item);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
