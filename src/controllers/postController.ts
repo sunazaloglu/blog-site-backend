@@ -11,26 +11,37 @@ import { getCategoryById } from "../models/categoryModel.js";
 export const getAllPostsController = async (req: Request, res: Response) => {
   try {
     const items = await getAllPosts();
-    res.json(items);
+    return res.status(200).json(items);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
-
 export const createPostController = async (req: Request, res: Response) => {
   try {
     const { category_id, title, content } = req.body;
 
-    if (!category_id) {
+    if (category_id === undefined) {
       return res.status(400).json({ message: "category_id is required" });
     }
-    const category = await getCategoryById(Number(category_id));
+    const categoryId = Number(category_id);
+    if (Number.isNaN(categoryId)) {
+      return res.status(400).json({ message: "category_id must be a number" });
+    }
+
+    if (!title || !content) {
+      return res
+        .status(400)
+        .json({ message: "title and content are required" });
+    }
+
+    const category = await getCategoryById(categoryId);
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
+
     const post = await createPost({
-      category_id,
+      category_id: categoryId,
       title,
       content,
     });
@@ -47,13 +58,12 @@ export const updatePostController = async (req: Request, res: Response) => {
     const { id } = req.params;
     const updatedItem = await updatePost(Number(id), req.body);
     if (updatedItem.length === 0) {
-      res.status(404).json({ message: "Post not found" });
-      return;
+      return res.status(404).json({ message: "Post not found" });
     }
-    res.json(updatedItem);
+    return res.status(200).json(updatedItem[0]);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -62,25 +72,26 @@ export const deletePostController = async (req: Request, res: Response) => {
     const { id } = req.params;
     const deletedItem = await deletePost(Number(id));
     if (deletedItem.length === 0) {
-      res.status(404).json({ message: "Post not found" });
-      return;
+      return res.status(404).json({ message: "Post not found" });
     }
-    res.status(204).json(deletedItem);
+    return res.status(200).json(deletedItem[0]);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 export const getPostByIdController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const item = await getPostById(Number(id));
+
     if (!item) {
-      res.status(404).json({ message: "Category not found" });
+      return res.status(404).json({ message: "Post not found" });
     }
-    res.status(200).json(item);
+
+    return res.status(200).json(item);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
