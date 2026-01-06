@@ -15,5 +15,5 @@ app.get("/projectcheck", (req: Request, res: Response) => {
 app.use("/api/v1/categories", categoryRoutes);
 
 app.listen(PORT, () => {
-  console.log("Server is running on port ${PORT}");
+  console.log(`Server is running on port ${PORT}`);
 });
