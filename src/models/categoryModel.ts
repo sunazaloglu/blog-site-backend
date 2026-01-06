@@ -24,5 +24,5 @@ export const deleteCategory = async (id: number) => {
 };
 
 export const getCategoryById = async (id: number) => {
-  return db("categories").where({ id, deleted_at: null }).first;
+  return db("categories").where({ id, deleted_at: null }).first();
 };
