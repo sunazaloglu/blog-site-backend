@@ -16,7 +16,7 @@ export const updatePost = async (id: number, data: object) => {
     .returning("*");
 };
 
-export const deleteCategory = async (id: number) => {
+export const deletePost = async (id: number) => {
   return db("posts")
     .where({ id, deleted_at: null })
     .update({ deleted_at: new Date() })
