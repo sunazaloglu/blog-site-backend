@@ -53,8 +53,8 @@ export const deleteCategoryController = async (req: Request, res: Response) => {
   }
 };
 export const getCategoryByIdController = async (
-  res: Response,
-  req: Request
+  req: Request,
+  res: Response
 ) => {
   try {
     const { id } = req.params;
