@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default {
-  production: {
+  development: {
     client: "pg",
     connection: {
       host: process.env.DB_HOST,
