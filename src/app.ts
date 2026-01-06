@@ -2,6 +2,7 @@ import express, { type Request, type Response } from "express";
 import dotenv from "dotenv";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.get("/projectcheck", (req: Request, res: Response) => {
 
 app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/posts", postRoutes);
+app.use("/api/v1/comments", commentRoutes);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
