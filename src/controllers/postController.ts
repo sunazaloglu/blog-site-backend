@@ -6,6 +6,7 @@ import {
   getPostById,
   updatePost,
 } from "../models/postModel.js";
+import { getCategoryById } from "../models/categoryModel.js";
 
 export const getAllPostsController = async (req: Request, res: Response) => {
   try {
@@ -19,11 +20,25 @@ export const getAllPostsController = async (req: Request, res: Response) => {
 
 export const createPostController = async (req: Request, res: Response) => {
   try {
-    const newItem = await createPost(req.body);
-    res.status(201).json(newItem);
+    const { category_id, title, content } = req.body;
+
+    if (!category_id) {
+      return res.status(400).json({ message: "category_id is required" });
+    }
+    const category = await getCategoryById(Number(category_id));
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    const post = await createPost({
+      category_id,
+      title,
+      content,
+    });
+
+    return res.status(201).json(post[0]);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
