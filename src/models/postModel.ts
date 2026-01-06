@@ -6,7 +6,7 @@ export const getAllPosts = async () => {
 };
 
 export const createPost = async (data: object) => {
-  return db("posts").insert({ data }).returning("*");
+  return db("posts").insert(data).returning("*");
 };
 
 export const updatePost = async (id: number, data: object) => {
