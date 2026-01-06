@@ -46,7 +46,7 @@ export const deleteCategoryController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const deletedItem = await deleteCategory(Number(id));
-    res.status(200).json(deletedItem);
+    res.status(204).json(deletedItem);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
