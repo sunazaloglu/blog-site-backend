@@ -13,7 +13,8 @@ export default {
       password: process.env.DB_PASSWORD,
     },
     migrations: {
-      directory: "/migrations",
+      directory: path.resolve("migrations"),
     },
   },
 };
+ 
