@@ -11,7 +11,6 @@ export async function up(knex) {
       .references("id")
       .inTable("categories")
       .onDelete("CASCADE");
-    table.string("name").notNullable();
   });
 }
 
