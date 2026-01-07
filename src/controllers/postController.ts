@@ -7,16 +7,38 @@ import {
   updatePost,
 } from "../models/postModel.js";
 import { getCategoryById } from "../models/categoryModel.js";
-
 export const getAllPostsController = async (req: Request, res: Response) => {
   try {
-    const items = await getAllPosts();
+    const filters: {
+      category?: number;
+      status?: "published" | "draft" | "all";
+      showDeleted?: "true" | "false" | "onlyDeleted";
+    } = {};
+
+    if (req.query.category !== undefined) {
+      const category = Number(req.query.category);
+      if (!Number.isNaN(category)) filters.category = category;
+    }
+
+    if (req.query.status !== undefined) {
+      filters.status = req.query.status.toString() as "published" | "draft" | "all";
+    }
+
+    if (req.query.showDeleted !== undefined) {
+      filters.showDeleted = req.query.showDeleted.toString() as
+        | "true"
+        | "false"
+        | "onlyDeleted";
+    }
+
+    const items = await getAllPosts(filters);
     return res.status(200).json(items);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
 export const createPostController = async (req: Request, res: Response) => {
   try {
     const { category_id, title, content } = req.body;
