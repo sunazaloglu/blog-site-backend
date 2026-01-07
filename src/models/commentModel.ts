@@ -1,8 +1,28 @@
 import db from "../config/database.js";
+type CommentFilters = {
+  post?: number;
+  commenter?: string;
+};
 
-export const getAllComments = async () => {
-  const query = db("comments");
-  return query.select("id", "commenter_name");
+export const getAllComments = async (filters: CommentFilters) => {
+  const q = db("comments").select(
+    "id",
+    "post_id",
+    "content",
+    "commenter_name",
+    "created_at"
+  );
+
+  if (filters.post !== undefined) {
+    q.where("post_id", filters.post);
+  }
+
+  if (filters.commenter) {
+    // PostgreSQL case-insensitive
+    q.whereILike("commenter_name", `%${filters.commenter}%`);
+  }
+
+  return q;
 };
 
 export const createComment = async (data: object) => {
