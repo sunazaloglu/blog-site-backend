@@ -34,10 +34,12 @@ export const updateCategory = async (id: number, data: object) => {
 
 export const deleteCategory = async (id: number) => {
   return db("categories")
-    .whereNotNull("deleted_at")
+    .where({ id })
+    .whereNull("deleted_at")
     .update({ deleted_at: new Date() })
     .returning("*");
 };
+
 
 export const getCategoryById = async (id: number) => {
   return db("categories").where({ id, deleted_at: null }).first();
