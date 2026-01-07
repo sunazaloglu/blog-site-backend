@@ -1,10 +1,21 @@
 import db from "../config/database.js";
 
-export const getAllCategories = async () => {
-  const query = db("categories");
-  return query.select("id", "name");
-};
+type ShowDeleted = "true" | "false" | "onlyDeleted";
 
+export const getAllCategories = async (showDeleted?: ShowDeleted) => {
+  const query = db("categories").select("id", "name", "created_at", "deleted_at");
+
+  if (showDeleted === "true") {
+    // hepsi gelsin
+  } else if (showDeleted === "onlyDeleted") {
+    query.whereNotNull("deleted_at");
+  } else {
+    // default: false
+    query.whereNull("deleted_at");
+  }
+
+  return query;
+};
 export const createCategory = async (name: string) => {
   return db("categories").insert({ name }).returning("*");
 };
