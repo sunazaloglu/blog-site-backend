@@ -9,8 +9,20 @@ import {
 
 export const getAllCommentsController = async (req: Request, res: Response) => {
   try {
-    const items = await getAllComments();
-    res.status(200).json(items);
+    const filters: { post?: number; commenter?: string } = {};
+
+    if (req.query.post !== undefined) {
+      const post = Number(req.query.post);
+      if (!Number.isNaN(post)) filters.post = post;
+    }
+
+    if (req.query.commenter !== undefined) {
+      const commenter = req.query.commenter.toString().trim();
+      if (commenter) filters.commenter = commenter;
+    }
+
+    const items = await getAllComments(filters);
+    return res.status(200).json(items);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
