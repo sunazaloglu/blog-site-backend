@@ -1,4 +1,5 @@
 import { type Request, type Response } from "express";
+import { getPostById } from "../models/postModel.js";
 import {
   createComment,
   deleteComment,
@@ -31,8 +32,33 @@ export const getAllCommentsController = async (req: Request, res: Response) => {
 
 export const createCommentController = async (req: Request, res: Response) => {
   try {
-    const newItem = await createComment(req.body);
-    res.status(201).json(newItem);
+    const { post_id, content, commenter_name } = req.body;
+
+    // zorunlu alanlar
+    if (!post_id) {
+      return res.status(400).json({ message: "post_id is required" });
+    }
+
+    if (!content || !commenter_name) {
+      return res
+        .status(400)
+        .json({ message: "content and commenter_name are required" });
+    }
+
+    // post var mı
+    const post = await getPostById(Number(post_id));
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // create
+    const newItem = await createComment({
+      post_id,
+      content,
+      commenter_name,
+    });
+
+    return res.status(201).json(newItem[0]);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
