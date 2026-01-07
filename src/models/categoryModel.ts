@@ -3,7 +3,12 @@ import db from "../config/database.js";
 type ShowDeleted = "true" | "false" | "onlyDeleted";
 
 export const getAllCategories = async (showDeleted?: ShowDeleted) => {
-  const query = db("categories").select("id", "name", "created_at", "deleted_at");
+  const query = db("categories").select(
+    "id",
+    "name",
+    "created_at",
+    "deleted_at"
+  );
 
   if (showDeleted === "true") {
     // hepsi gelsin
@@ -29,7 +34,7 @@ export const updateCategory = async (id: number, data: object) => {
 
 export const deleteCategory = async (id: number) => {
   return db("categories")
-    .where({ id, deleted_at: null })
+    .whereNotNull("deleted_at")
     .update({ deleted_at: new Date() })
     .returning("*");
 };
